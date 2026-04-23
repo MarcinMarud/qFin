@@ -1,4 +1,4 @@
-# qFin
+# pyqfin
 A professional, vectorised quantitative finance library for pricing options, forwards, futures, and multi-asset derivatives.
 
 ## Features
