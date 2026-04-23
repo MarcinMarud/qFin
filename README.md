@@ -11,7 +11,7 @@ A professional, vectorised quantitative finance library for pricing options, for
 
 ## Installation
 ```bash
-pip install qFin
+pip install qfin-lib
 ```
 
 ## Quick Start
@@ -108,6 +108,6 @@ result = Pricer({
 ## Running Tests
 If you cloned the repository and want to run the tests locally:
 ```bash
-pip install qFin[dev]
+pip install qfin-lib[dev]
 pytest src/tests/ -v
 ```

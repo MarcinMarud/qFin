@@ -1,5 +1,5 @@
 [project]
-name = "qFin"
+name = "qfin-lib"
 version = "1.0.0"
 description = "Quantitative finance pricing library"
 authors = [
