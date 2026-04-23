@@ -1,5 +1,5 @@
 [project]
-name = "qfin-lib"
+name = "marcin-qfin"
 version = "1.0.0"
 description = "Quantitative finance pricing library"
 authors = [
