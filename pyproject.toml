@@ -1,6 +1,6 @@
 [project]
 name = "pyqfin"
-version = "1.0.0"
+version = "1.0.1"
 description = "Quantitative finance pricing library"
 authors = [
     {name = "Marcin", email = "jojokozaksonx@gmail.com"}
