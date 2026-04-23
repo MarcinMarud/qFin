@@ -4,7 +4,7 @@ equal to S_T - K at maturity, priced under the risk-neutral measure via
 Monte Carlo simulation.
 """
 
-from payoffs.instruments import Instrument
+from pyqfin.payoffs.instruments import Instrument
 import numpy as np
 
 class Forwards(Instrument):

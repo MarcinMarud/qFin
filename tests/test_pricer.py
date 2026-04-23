@@ -2,7 +2,7 @@
 Tests for the dictionary-based Pricer API.
 """
 import pytest
-from pricer import Pricer, PricingResult, PortfolioResult
+from pyqfin.pricer import Pricer, PricingResult, PortfolioResult
 
 
 class TestPricerAPI:

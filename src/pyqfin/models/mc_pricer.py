@@ -5,7 +5,7 @@ correlated multi-asset instruments via Cholesky Monte Carlo.
 """
 
 import numpy as np
-from market_data.yield_curve import YieldCurve
+from pyqfin.market_data.yield_curve import YieldCurve
 
 
 class MCPricer:

@@ -11,7 +11,7 @@ A professional, vectorised quantitative finance library for pricing options, for
 
 ## Installation
 ```bash
-pip install marcin-qfin
+pip install pyqfin
 ```
 
 ## Quick Start
@@ -20,7 +20,7 @@ pip install marcin-qfin
 The `Pricer` handles all the internal wiring (engines, yield curves, payoff classes).
 
 ```python
-from qfin import Pricer
+from pyqfin import Pricer
 
 # Vanilla Call (defaults to analytical BSM)
 result = Pricer({
@@ -108,6 +108,6 @@ result = Pricer({
 ## Running Tests
 If you cloned the repository and want to run the tests locally:
 ```bash
-pip install marcin-qfin[dev]
-pytest src/tests/ -v
+pip install pyqfin[dev]
+pytest tests/ -v
 ```

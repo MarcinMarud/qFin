@@ -4,11 +4,11 @@ MultiAssetGreeks is not tested here due to long runtime.
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve
-from models.numerical import MonteCarlo
-from models.analytical import BlackScholes
-from risk_management.greeks import Greeks
-from payoffs.options_payoff import VanillaOptions
+from pyqfin.market_data.yield_curve import FlatCurve
+from pyqfin.models.numerical import MonteCarlo
+from pyqfin.models.analytical import BlackScholes
+from pyqfin.risk_management.greeks import Greeks
+from pyqfin.payoffs.options_payoff import VanillaOptions
 
 
 class TestGreeks:

@@ -3,7 +3,7 @@ Tests for market_data.yield_curve — FlatCurve, InterpolatedCurve, YieldCurve b
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve, InterpolatedCurve
+from pyqfin.market_data.yield_curve import FlatCurve, InterpolatedCurve
 
 
 # ── FlatCurve ──────────────────────────────────────────────────────

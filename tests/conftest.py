@@ -3,8 +3,8 @@ Shared fixtures for the test suite.
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve, InterpolatedCurve
-from models.numerical import MonteCarlo
+from pyqfin.market_data.yield_curve import FlatCurve, InterpolatedCurve
+from pyqfin.models.numerical import MonteCarlo
 
 
 @pytest.fixture

@@ -3,8 +3,8 @@ Tests for risk_management.implied_volatility — all three IV solvers.
 """
 import pytest
 import numpy as np
-from models.analytical import BlackScholes
-from risk_management.implied_volatility import ImpliedVolatility
+from pyqfin.models.analytical import BlackScholes
+from pyqfin.risk_management.implied_volatility import ImpliedVolatility
 
 
 class TestImpliedVolatility:

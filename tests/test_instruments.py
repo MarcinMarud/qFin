@@ -3,8 +3,8 @@ Tests for payoffs.instruments — Instrument, MultiAssetInstrument base classes.
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve
-from payoffs.instruments import Instrument, MultiAssetInstrument
+from pyqfin.market_data.yield_curve import FlatCurve
+from pyqfin.payoffs.instruments import Instrument, MultiAssetInstrument
 
 
 # ── Instrument ─────────────────────────────────────────────────────

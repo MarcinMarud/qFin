@@ -4,7 +4,7 @@ Provides Newton-Raphson, bisection, and a hybrid approach that
 combines both for robust convergence.
 """
 
-from models.analytical import BlackScholes
+from pyqfin.models.analytical import BlackScholes
 
 class ImpliedVolatility:
     """Implied volatility calculator using Black-Scholes as the pricing model.

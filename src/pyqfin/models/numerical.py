@@ -4,8 +4,8 @@ Heston stochastic volatility model, and CRR binomial tree for American options.
 """
 
 import numpy as np
-from market_data.yield_curve import YieldCurve
-from payoffs.instruments import Instrument
+from pyqfin.market_data.yield_curve import YieldCurve
+from pyqfin.payoffs.instruments import Instrument
 
 class MonteCarlo:
     """Monte Carlo simulation engine for single-asset and multi-asset GBM paths.

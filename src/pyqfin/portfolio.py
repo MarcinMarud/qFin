@@ -3,8 +3,8 @@ Portfolio management module for aggregating positions, computing
 total portfolio value, and calculating portfolio-level Greeks.
 """
 
-from models.mc_pricer import MCPricer
-from risk_management.greeks import Greeks
+from pyqfin.models.mc_pricer import MCPricer
+from pyqfin.risk_management.greeks import Greeks
 
 class Portfolio:
     """Collection of derivative positions with aggregated pricing and risk.

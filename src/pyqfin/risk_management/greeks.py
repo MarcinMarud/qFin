@@ -4,9 +4,9 @@ sensitivities for single-asset instruments; MultiAssetGreeks handles
 per-asset sensitivities for multi-asset instruments.
 """
 
-from models.mc_pricer import MCPricer, MultiAssetMCPricer
-from market_data.yield_curve import YieldCurve
-from models.numerical import MonteCarlo
+from pyqfin.models.mc_pricer import MCPricer, MultiAssetMCPricer
+from pyqfin.market_data.yield_curve import YieldCurve
+from pyqfin.models.numerical import MonteCarlo
 import numpy as np
 
 class Greeks:

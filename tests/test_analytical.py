@@ -3,7 +3,7 @@ Tests for models.analytical — BlackScholes and FixedContractsCalculations.
 """
 import pytest
 import numpy as np
-from models.analytical import BlackScholes, FixedContractsCalculations
+from pyqfin.models.analytical import BlackScholes, FixedContractsCalculations
 
 
 # ── BlackScholes ──────────────────────────────────────────────────

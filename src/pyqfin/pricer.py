@@ -6,17 +6,17 @@ from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
 import numpy as np
 
-from market_data.yield_curve import FlatCurve
-from models.numerical import MonteCarlo, Heston, BinominalTree
-from models.analytical import BlackScholes
-from models.mc_pricer import MCPricer, MultiAssetMCPricer
-from payoffs.options_payoff import (
+from pyqfin.market_data.yield_curve import FlatCurve
+from pyqfin.models.numerical import MonteCarlo, Heston, BinominalTree
+from pyqfin.models.analytical import BlackScholes
+from pyqfin.models.mc_pricer import MCPricer, MultiAssetMCPricer
+from pyqfin.payoffs.options_payoff import (
     VanillaOptions, AsianOptions, BarrierOptions,
     BasketOption, RainbowOption, SpreadOption, AmericanOption
 )
-from payoffs.forwards_futures_payoff import Forwards, Futures
-from risk_management.greeks import Greeks, MultiAssetGreeks
-from portfolio import Portfolio
+from pyqfin.payoffs.forwards_futures_payoff import Forwards, Futures
+from pyqfin.risk_management.greeks import Greeks, MultiAssetGreeks
+from pyqfin.portfolio import Portfolio
 
 
 @dataclass

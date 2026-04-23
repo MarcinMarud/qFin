@@ -3,7 +3,7 @@ Tests for payoffs.forwards_futures_payoff — Forwards and Futures.
 """
 import pytest
 import numpy as np
-from payoffs.forwards_futures_payoff import Forwards, Futures
+from pyqfin.payoffs.forwards_futures_payoff import Forwards, Futures
 
 
 class TestForwards:

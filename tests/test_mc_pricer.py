@@ -3,11 +3,11 @@ Tests for models.mc_pricer — MCPricer and MultiAssetMCPricer.
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve
-from models.numerical import MonteCarlo
-from models.mc_pricer import MCPricer, MultiAssetMCPricer
-from models.analytical import BlackScholes
-from payoffs.options_payoff import VanillaOptions, BasketOption
+from pyqfin.market_data.yield_curve import FlatCurve
+from pyqfin.models.numerical import MonteCarlo
+from pyqfin.models.mc_pricer import MCPricer, MultiAssetMCPricer
+from pyqfin.models.analytical import BlackScholes
+from pyqfin.payoffs.options_payoff import VanillaOptions, BasketOption
 
 
 class TestMCPricer:

@@ -6,7 +6,7 @@ by all payoff classes, pricers, and risk engines.
 
 import numpy as np
 import copy
-from market_data.yield_curve import YieldCurve, FlatCurve
+from pyqfin.market_data.yield_curve import YieldCurve, FlatCurve
 
 class Instrument:
     """Base class for single-asset derivative instruments.

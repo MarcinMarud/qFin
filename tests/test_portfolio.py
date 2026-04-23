@@ -3,11 +3,11 @@ Tests for portfolio — Portfolio class.
 """
 import pytest
 import numpy as np
-from market_data.yield_curve import FlatCurve
-from models.numerical import MonteCarlo
-from models.analytical import BlackScholes
-from payoffs.options_payoff import VanillaOptions
-from portfolio import Portfolio
+from pyqfin.market_data.yield_curve import FlatCurve
+from pyqfin.models.numerical import MonteCarlo
+from pyqfin.models.analytical import BlackScholes
+from pyqfin.payoffs.options_payoff import VanillaOptions
+from pyqfin.portfolio import Portfolio
 
 
 class TestPortfolio:

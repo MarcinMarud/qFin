@@ -3,7 +3,7 @@ Tests for payoffs.options_payoff — all option payoff classes.
 """
 import pytest
 import numpy as np
-from payoffs.options_payoff import (
+from pyqfin.payoffs.options_payoff import (
     VanillaOptions, AsianOptions, BarrierOptions,
     BasketOption, RainbowOption, SpreadOption, AmericanOption,
 )

@@ -4,7 +4,7 @@ Each class defines a get_payoff() method that computes the terminal payoff
 from simulated price paths set by the Monte Carlo pricer.
 """
 
-from payoffs.instruments import Instrument, MultiAssetInstrument
+from pyqfin.payoffs.instruments import Instrument, MultiAssetInstrument
 import numpy as np
 
 class VanillaOptions(Instrument):
