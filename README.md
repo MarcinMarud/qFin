@@ -32,12 +32,13 @@ pip install pyqfin
 
 ## Quick Start
 
-### Vanilla Option (BSM)
-The `Pricer` handles all internal wiring (engines, yield curves, payoff classes).
+### Single Option Pricing
+The `Pricer` handles all the internal wiring (engines, yield curves, payoff classes).
 
 ```python
 from pyqfin import Pricer
 
+# Vanilla Call (defaults to analytical BSM)
 result = Pricer({
     'type': 'vanilla',
     'option_type': 'c',
@@ -50,16 +51,17 @@ print(f"Price: {result.price:.4f}")
 print(f"Delta: {result.greeks['delta']:.4f}")
 ```
 
-### American Option (Binomial Tree)
+### American Options
 Automatically utilizes the binomial tree engine:
 
 ```python
+# American Put
 result = Pricer({
     'type': 'american',
     'option_type': 'p',
     'S': 100, 'K': 105, 'T': 1.0, 
     'vol': 0.20, 'r': 0.05,
-    'n_steps': 500
+    'n_steps': 500  # Tree depth
 }).run()
 print(f"American Premium Price: {result.price:.4f}")
 ```
@@ -80,41 +82,33 @@ result = Pricer({
 }).run()
 ```
 
-### Multi-Asset Options (Basket / Rainbow / Spread)
-Provide arrays for `S` and `vol`, and a correlation matrix. Uses Cholesky-based Monte Carlo.
+### Multi-Asset Basket Option
+Provide arrays for `S` and `vol`, and a correlation matrix. The library automatically uses Cholesky-based Monte Carlo.
 
 ```python
 import numpy as np
 
-corr = np.array([[1.0, 0.6], [0.6, 1.0]])
+corr_matrix = np.array([
+    [1.0, 0.6, 0.3], 
+    [0.6, 1.0, 0.5], 
+    [0.3, 0.5, 1.0]
+])
 
 result = Pricer({
-    'type': 'spread',
+    'type': 'basket',
     'option_type': 'c',
-    'S': [100, 95],
-    'K': 5, 'T': 1.0,
-    'vol': [0.20, 0.25],
-    'corr': corr,
-    'r': 0.05
-}).run()
-```
-
-### Heston Stochastic Volatility
-Provide specific variance parameters instead of constant volatility.
-
-```python
-result = Pricer({
-    'type': 'vanilla',
-    'option_type': 'c',
-    'S': 100, 'K': 105, 'T': 1.0, 'r': 0.05,
-    'engine': 'heston',
-    'v0': 0.04, 'kappa': 2.0, 'theta': 0.04,
-    'xi': 0.3, 'rho_heston': -0.7
+    'S': [100, 110, 90],
+    'K': 100, 'T': 1.0,
+    'vol': [0.20, 0.25, 0.30],
+    'corr': corr_matrix,
+    'weights': [1/3, 1/3, 1/3],
+    'r': 0.05,
+    'n_paths': 50000
 }).run()
 ```
 
 ### Portfolio Pricing
-Pass a list of configurations with `'quantity'` to price an entire book at once.
+Pass a list of configurations (must include `'quantity'`) to price an entire book at once and aggregate risks.
 
 ```python
 portfolio = Pricer.portfolio([
@@ -124,6 +118,23 @@ portfolio = Pricer.portfolio([
 
 print(f"Total Portfolio Value: {portfolio.total_value:.2f}")
 print(f"Net Delta: {portfolio.total_greeks['delta']:.2f}")
+```
+
+### Heston Model (Stochastic Volatility)
+If you select the `heston` engine, provide the specific variance parameters instead of standard volatility.
+
+```python
+result = Pricer({
+    'type': 'vanilla',
+    'option_type': 'c',
+    'S': 100, 'K': 105, 'T': 1.0, 'r': 0.05,
+    'engine': 'heston',
+    'v0': 0.04,        # initial variance
+    'kappa': 2.0,      # mean-reversion speed
+    'theta': 0.04,     # long-run variance
+    'xi': 0.3,         # vol-of-vol
+    'rho_heston': -0.7 # correlation
+}).run()
 ```
 
 ## API Reference
@@ -208,74 +219,64 @@ Found in `pyqfin.market_data.yield_curve`.
 ### Black-Scholes-Merton
 European option pricing in a continuous-time log-normal diffusion framework.
 
-```math
-C(S, t) = S_t N(d_1) - K e^{-r(T-t)} N(d_2)
-```
-```math
-P(S, t) = K e^{-r(T-t)} N(-d_2) - S_t N(-d_1)
-```
+Call: `C(S, t) = S * N(d1) - K * exp(-r * (T-t)) * N(d2)`
+Put:  `P(S, t) = K * exp(-r * (T-t)) * N(-d2) - S * N(-d1)`
+
 Where:
-```math
-d_{1,2} = \frac{\ln(S_t/K) + (r \pm \frac{\sigma^2}{2})(T-t)}{\sigma \sqrt{T-t}}
-```
+`d1 = [ln(S/K) + (r + (vol^2)/2) * (T-t)] / (vol * sqrt(T-t))`
+`d2 = d1 - vol * sqrt(T-t)`
 
 ### Monte Carlo Simulation
 Under the risk-neutral measure, the asset price follows Geometric Brownian Motion (GBM). Discretised via Euler scheme:
 
-```math
-S_{t+\Delta t} = S_t \exp\left( \left( r - \frac{\sigma^2}{2} \right)\Delta t + \sigma \sqrt{\Delta t} Z \right)
-```
-Where $Z \sim \mathcal{N}(0, 1)$. We apply antithetic variates by simulating path pairs with $+Z$ and $-Z$.
+`S_next = S * exp((r - (vol^2)/2) * dt + vol * sqrt(dt) * Z)`
 
-**Cholesky Multi-Asset**: To simulate $k$ correlated assets with correlation matrix $P$, we perform Cholesky decomposition $P = L L^T$ and multiply independent normals $\mathbf{Z}$ by $L$:
-```math
-\mathbf{Z}_{corr} = L \mathbf{Z}
-```
+Where `Z` is a standard normal random variable. We apply antithetic variates by simulating path pairs with `+Z` and `-Z`.
+
+**Cholesky Multi-Asset**: To simulate `k` correlated assets with correlation matrix `P`, we perform Cholesky decomposition `P = L * L.T` and multiply independent normals `Z` by `L`:
+`Z_corr = L * Z`
 
 ### Heston Model
 Stochastic volatility framework where the variance follows a CIR (Cox-Ingersoll-Ross) mean-reverting process:
 
-```math
-dS_t = r S_t dt + \sqrt{v_t} S_t dW_t^S
-```
-```math
-dv_t = \kappa (\theta - v_t) dt + \xi \sqrt{v_t} dW_t^v
-```
-With $dW^S dW^v = \rho dt$.
+`dS = r * S * dt + sqrt(v) * S * dW_S`
+`dv = kappa * (theta - v) * dt + xi * sqrt(v) * dW_v`
+
+With `dW_S * dW_v = rho * dt`.
 
 ### Binomial Tree (CRR)
 Cox-Ross-Rubinstein lattice parameters:
-```math
-u = \exp(\sigma \sqrt{\Delta t}), \quad d = \frac{1}{u}, \quad p = \frac{\exp(r \Delta t) - d}{u - d}
-```
-Backward induction at each node $i$:
-```math
-V_i = e^{-r \Delta t} (p V_{up} + (1-p) V_{down})
-```
+`u = exp(vol * sqrt(dt))`
+`d = 1 / u`
+`p = (exp(r * dt) - d) / (u - d)`
+
+Backward induction at each node `i`:
+`V_i = exp(-r * dt) * (p * V_up + (1-p) * V_down)`
+
 For American options, early exercise implies:
-```math
-V_i = \max(V_i, \text{Intrinsic})
-```
+`V_i = max(V_i, IntrinsicValue)`
 
 ### Finite-Difference Greeks
-- **Delta ($\Delta$)**: $\frac{V(S+\delta S) - V(S-\delta S)}{2\delta S}$
-- **Gamma ($\Gamma$)**: $\frac{V(S+\delta S) - 2V(S) + V(S-\delta S)}{(\delta S)^2}$
-- **Vega ($\mathcal{V}$)**: $\frac{V(\sigma+\delta\sigma) - V(\sigma-\delta\sigma)}{2\delta\sigma}$
-- **Theta ($\Theta$)**: $\frac{V(T-\delta T) - V(T)}{-\delta T}$
-- **Rho ($\rho$)**: $\frac{V(r+\delta r) - V(r-\delta r)}{2\delta r}$
+- **Delta**: `(V(S + dS) - V(S - dS)) / (2 * dS)`
+- **Gamma**: `(V(S + dS) - 2*V(S) + V(S - dS)) / (dS^2)`
+- **Vega**: `(V(vol + dVol) - V(vol - dVol)) / (2 * dVol)`
+- **Theta**: `(V(T - dT) - V(T)) / (-dT)`
+- **Rho**: `(V(r + dr) - V(r - dr)) / (2 * dr)`
 
 ### Implied Volatility
 Newton-Raphson update step:
-```math
-\sigma_{n+1} = \sigma_n - \frac{BSM(\sigma_n) - C_{mkt}}{\mathcal{V}(\sigma_n)}
-```
+`vol_next = vol_current - (BSM(vol_current) - MarketPrice) / Vega(vol_current)`
 
 ### Yield Curve
 Discount factor and zero rate relationship:
-```math
-D(0, t) = e^{-r(t) \cdot t} \iff r(t) = -\frac{\ln D(0, t)}{t}
-```
-Forward rate between $t_1$ and $t_2$:
-```math
-f(t_1, t_2) = -\frac{\ln(D(0, t_2)/D(0, t_1))}{t_2 - t_1}
+`D(0, t) = exp(-r(t) * t)`  <=>  `r(t) = -ln(D(0, t)) / t`
+
+Forward rate between `t1` and `t2`:
+`f(t1, t2) = -ln(D(0, t2) / D(0, t1)) / (t2 - t1)`
+
+## Running Tests
+If you cloned the repository and want to run the tests locally:
+```bash
+pip install pyqfin[dev]
+pytest tests/ -v
 ```
